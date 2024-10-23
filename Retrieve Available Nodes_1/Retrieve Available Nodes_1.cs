@@ -68,11 +68,13 @@ namespace RetrieveAvailableNodes_1
 		{
 			return new GQIColumn[]
 			{
-			new GQIIntColumn("Index"),
+			new GQIStringColumn("Index"),
 			new GQIStringColumn("Name"),
 			new GQIStringColumn("State"),
 			new GQIStringColumn("Protocol"),
 			new GQIStringColumn("Alarm State"),
+			new GQIIntColumn("X"),
+			new GQIIntColumn("Y"),
 			};
 		}
 
@@ -87,6 +89,21 @@ namespace RetrieveAvailableNodes_1
 			return default;
 		}
 
+		private static void GetElementCoordinates(Dictionary<string, string> nodeEdgeXDict, Dictionary<string, string> nodeEdgeYDict, string sourceElementID, out string nodeEdgeXValue, out string nodeEdgeYValue)
+		{
+			nodeEdgeXValue = "N/A";
+			nodeEdgeYValue = "N/A";
+			if (nodeEdgeXDict.TryGetValue(sourceElementID, out string nodeEdgeXStr))
+			{
+				nodeEdgeXValue = nodeEdgeXStr;
+			}
+
+			if (nodeEdgeYDict.TryGetValue(sourceElementID, out string nodeEdgeYStr))
+			{
+				nodeEdgeYValue = nodeEdgeYStr;
+			}
+		}
+
 		private GQIPage GetData()
 		{
 			var elements = GetElements().ToList();
@@ -96,22 +113,36 @@ namespace RetrieveAvailableNodes_1
 				return new GQIPage(new List<GQIRow>().ToArray()) { HasNextPage = false };
 			}
 
+			var nodeEdgeXDict = GetNodeEdgeValues("NodeEdgeX");
+			var nodeEdgeYDict = GetNodeEdgeValues("NodeEdgeY");
+
 			var rows = new List<GQIRow>();
 
 			foreach (var element in elements)
 			{
-				var alarmState = GetElementAlarmState(element.ElementID, element.DataMinerID);
-				var cells = new List<GQICell>
+				if (element.State.ToString().Equals("Active") ||
+					element.State.ToString().Equals("Paused") ||
+					element.State.ToString().Equals("Masked"))
 				{
-					new GQICell { Value = element.ElementID},
-					new GQICell { Value = element.Name},
-					new GQICell { Value = element.State.ToString() },
-					new GQICell { Value = element.Protocol },
-					new GQICell { Value = alarmState},
-				};
+					var alarmState = element.State.ToString().Equals("Active") ? GetElementAlarmState(element.ElementID, element.DataMinerID) : "N/A";
 
-				var rowData = new GQIRow(cells.ToArray());
-				rows.Add(rowData);
+					var sourceElementID = $"{element.DataMinerID}/{element.ElementID}";
+					GetElementCoordinates(nodeEdgeXDict, nodeEdgeYDict, sourceElementID, out string nodeEdgeXValue, out string nodeEdgeYValue);
+
+					var cells = new List<GQICell>
+					{
+						new GQICell { Value = $"{element.DataMinerID}/{element.ElementID}"},
+						new GQICell { Value = element.Name},
+						new GQICell { Value = element.State.ToString()},
+						new GQICell { Value = element.Protocol},
+						new GQICell { Value = alarmState},
+						new GQICell { Value = int.TryParse(nodeEdgeXValue, out int nodeEdgeXInt) ? nodeEdgeXInt : -1 },
+						new GQICell { Value = int.TryParse(nodeEdgeYValue, out int nodeEdgeYInt) ? nodeEdgeYInt : -1 },
+					};
+
+					var rowData = new GQIRow(cells.ToArray());
+					rows.Add(rowData);
+				}
 			}
 
 			return new GQIPage(rows.ToArray()) { HasNextPage = false };
@@ -149,14 +180,39 @@ namespace RetrieveAvailableNodes_1
 			}
 			catch (Exception)
 			{
-				return null;
+				return new List<LiteElementInfoEvent>();
 			}
 		}
 
-		private string GetElementAlarmState (Int32 elementID, Int32 dmaID)
+		private Dictionary<string, string> GetNodeEdgeValues(string coordinate)
+		{
+			Dictionary<string, string> dict = new Dictionary<string, string>();
+			var getPropertyNodeX = new GetPropertyValueMessage
+			{
+				PropertyName = coordinate,
+			};
+
+			DMSMessage[] responses = _dms.SendMessages(getPropertyNodeX);
+			foreach (var response in responses)
+			{
+				var uniqueResponse = response as PropertyChangeEventMessage;
+				if (uniqueResponse == null)
+				{
+					continue;
+				}
+
+				var value = uniqueResponse.Value;
+				var element = $"{uniqueResponse.DataMinerID}/{uniqueResponse.ElementID}";
+				dict[element] = value;
+			}
+
+			return dict;
+		}
+
+		private string GetElementAlarmState(Int32 elementID, Int32 dmaID)
 		{
 			int alarmStateParam = 65008;
-			var request = new GetParameterMessage()
+			var request = new GetParameterMessage
 			{
 				DataMinerID = dmaID,
 				ElId = elementID,

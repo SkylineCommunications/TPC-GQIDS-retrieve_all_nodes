@@ -384,11 +384,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.csproj",
+      "projectUniqueName": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.csproj",
       "projectName": "Retrieve Available Nodes_1",
-      "projectPath": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.csproj",
+      "projectPath": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.csproj",
       "packagesPath": "C:\\Users\\sofiana\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes_1\\obj\\",
+      "outputPath": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes_1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\sofiana\\AppData\\Roaming\\NuGet\\NuGet.Config",

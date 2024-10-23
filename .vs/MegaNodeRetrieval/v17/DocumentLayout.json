@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\",
+  "WorkspaceRootPath": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{478EA8DB-51B9-44F6-9750-D54110071B28}|Retrieve Available Nodes_1\\Retrieve Available Nodes_1.csproj|c:\\users\\sofiana\\onedrive - skyline communications nv\\desktop\\project files\\ad hoc scripts\\meganoderetrieval\\retrieve available nodes_1\\retrieve available nodes_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{478EA8DB-51B9-44F6-9750-D54110071B28}|Retrieve Available Nodes_1\\Retrieve Available Nodes_1.csproj|c:\\github\\skyline\\slc-gqids-retrieve_all_nodes\\retrieve available nodes_1\\retrieve available nodes_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{478EA8DB-51B9-44F6-9750-D54110071B28}|Retrieve Available Nodes_1\\Retrieve Available Nodes_1.csproj|solutionrelative:retrieve available nodes_1\\retrieve available nodes_1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{57AC59B4-D906-4013-9E40-D1AD8339010B}|Retrieve Available Nodes{57AC59B4-D906-4013-9E40-D1AD8339010B}|C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "AbsoluteMoniker": "D:0:0:{57AC59B4-D906-4013-9E40-D1AD8339010B}|Retrieve Available Nodes{57AC59B4-D906-4013-9E40-D1AD8339010B}|C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{57AC59B4-D906-4013-9E40-D1AD8339010B}|Retrieve Available Nodes{57AC59B4-D906-4013-9E40-D1AD8339010B}|solutionrelative:Retrieve Available Nodes.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
@@ -27,42 +27,16 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             }
           ]
         },
         {
           "DockedHeight": 126,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Retrieve Available Nodes_1.cs",
-              "DocumentMoniker": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
-              "RelativeDocumentMoniker": "Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
-              "ToolTip": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
-              "RelativeToolTip": "Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
-              "ViewState": "AQIAAJgAAAAAAAAAAAAAAKoAAAAmAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-24T20:27:15.506Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Retrieve Available Nodes.xml",
-              "DocumentMoniker": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes.xml",
-              "RelativeDocumentMoniker": "Retrieve Available Nodes.xml",
-              "ToolTip": "C:\\Users\\sofiana\\OneDrive - Skyline Communications NV\\Desktop\\Project Files\\Ad Hoc Scripts\\MegaNodeRetrieval\\Retrieve Available Nodes.xml",
-              "RelativeToolTip": "Retrieve Available Nodes.xml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
-              "WhenOpened": "2024-09-24T20:27:06.595Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{80ea8a3e-74c1-450e-a9f4-76a6793400b8}"
             },
             {
               "$type": "Bookmark",
@@ -71,6 +45,39 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{7505da5e-07d6-4842-9870-2f708552e445}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{64debe95-07ea-48ac-8744-af87605d624a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Retrieve Available Nodes_1.cs",
+              "DocumentMoniker": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
+              "RelativeDocumentMoniker": "Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
+              "ToolTip": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
+              "RelativeToolTip": "Retrieve Available Nodes_1\\Retrieve Available Nodes_1.cs",
+              "ViewState": "AQIAADwAAAAAAAAAAAAAAGEAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-24T20:27:15.506Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Retrieve Available Nodes.xml",
+              "DocumentMoniker": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes.xml",
+              "RelativeDocumentMoniker": "Retrieve Available Nodes.xml",
+              "ToolTip": "C:\\GitHub\\Skyline\\SLC-GQIDS-retrieve_all_nodes\\Retrieve Available Nodes.xml",
+              "RelativeToolTip": "Retrieve Available Nodes.xml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2024-09-24T20:27:06.595Z"
             }
           ]
         }
