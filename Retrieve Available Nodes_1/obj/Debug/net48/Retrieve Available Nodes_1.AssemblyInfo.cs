@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Retrieve Available Nodes_1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+36b7983943002ff19d62ef154ec6817edba82bbd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee92f0628431ceae50c2d03f6cbd1a081d7b04e1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Retrieve Available Nodes_1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Retrieve Available Nodes_1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

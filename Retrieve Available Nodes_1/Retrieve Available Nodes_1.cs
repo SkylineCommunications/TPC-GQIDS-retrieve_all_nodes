@@ -49,32 +49,38 @@ DATE		VERSION		AUTHOR			COMMENTS
 ****************************************************************************
 */
 
+// Ignore Spelling: Gqi Dms
 namespace RetrieveAvailableNodes_1
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Configuration;
 	using System.Linq;
-
 	using Skyline.DataMiner.Analytics.GenericInterface;
+	using Skyline.DataMiner.Core.DataMinerSystem.Common;
+	using Skyline.DataMiner.Net;
 	using Skyline.DataMiner.Net.Messages;
+	using AlarmLevel = Skyline.DataMiner.Core.DataMinerSystem.Common.AlarmLevel;
+	using ElementState = Skyline.DataMiner.Core.DataMinerSystem.Common.ElementState;
 
 	[GQIMetaData(Name = "Collect_All_Nodes")]
 
 	public class CollectNodes : IGQIDataSource, IGQIOnInit
 	{
-		private GQIDMS _dms;
+		private IDms _dms;
+		private GQIDMS _gqiDms;
 
 		public GQIColumn[] GetColumns()
 		{
 			return new GQIColumn[]
 			{
-			new GQIStringColumn("Index"),
-			new GQIStringColumn("Name"),
-			new GQIStringColumn("State"),
-			new GQIStringColumn("Protocol"),
-			new GQIStringColumn("Alarm State"),
-			new GQIIntColumn("X"),
-			new GQIIntColumn("Y"),
+				new GQIStringColumn("Index"),
+				new GQIStringColumn("Name"),
+				new GQIStringColumn("State"),
+				new GQIStringColumn("Protocol"),
+				new GQIStringColumn("Alarm State"),
+				new GQIIntColumn("X"),
+				new GQIIntColumn("Y"),
 			};
 		}
 
@@ -85,150 +91,79 @@ namespace RetrieveAvailableNodes_1
 
 		public OnInitOutputArgs OnInit(OnInitInputArgs args)
 		{
-			_dms = args.DMS;
+			_gqiDms = args.DMS;
+			_dms = DmsFactory.CreateDms(new GqiDmsConnection(_gqiDms));
 			return default;
-		}
-
-		private static void GetElementCoordinates(Dictionary<string, string> nodeEdgeXDict, Dictionary<string, string> nodeEdgeYDict, string sourceElementID, out string nodeEdgeXValue, out string nodeEdgeYValue)
-		{
-			nodeEdgeXValue = "N/A";
-			nodeEdgeYValue = "N/A";
-			if (nodeEdgeXDict.TryGetValue(sourceElementID, out string nodeEdgeXStr))
-			{
-				nodeEdgeXValue = nodeEdgeXStr;
-			}
-
-			if (nodeEdgeYDict.TryGetValue(sourceElementID, out string nodeEdgeYStr))
-			{
-				nodeEdgeYValue = nodeEdgeYStr;
-			}
 		}
 
 		private GQIPage GetData()
 		{
-			var elements = GetElements().ToList();
+			var elements = GetElements();
 
 			if (elements.Count == 0)
 			{
 				return new GQIPage(new List<GQIRow>().ToArray()) { HasNextPage = false };
 			}
 
-			var nodeEdgeXDict = GetNodeEdgeValues("NodeEdgeX");
-			var nodeEdgeYDict = GetNodeEdgeValues("NodeEdgeY");
-
 			var rows = new List<GQIRow>();
 
 			foreach (var element in elements)
 			{
-				if (element.State.ToString().Equals("Active") ||
-					element.State.ToString().Equals("Paused") ||
-					element.State.ToString().Equals("Masked"))
+				var elementState = element.State;
+				if (!elementState.Equals(ElementState.Active) && !elementState.Equals(ElementState.Paused) && !elementState.Equals(ElementState.Masked))
 				{
-					var alarmState = element.State.ToString().Equals("Active") ? GetElementAlarmState(element.ElementID, element.DataMinerID) : "N/A";
-
-					var sourceElementID = $"{element.DataMinerID}/{element.ElementID}";
-					GetElementCoordinates(nodeEdgeXDict, nodeEdgeYDict, sourceElementID, out string nodeEdgeXValue, out string nodeEdgeYValue);
-
-					var cells = new List<GQICell>
-					{
-						new GQICell { Value = $"{element.DataMinerID}/{element.ElementID}"},
-						new GQICell { Value = element.Name},
-						new GQICell { Value = element.State.ToString()},
-						new GQICell { Value = element.Protocol},
-						new GQICell { Value = alarmState},
-						new GQICell { Value = int.TryParse(nodeEdgeXValue, out int nodeEdgeXInt) ? nodeEdgeXInt : -1 },
-						new GQICell { Value = int.TryParse(nodeEdgeYValue, out int nodeEdgeYInt) ? nodeEdgeYInt : -1 },
-					};
-
-					var rowData = new GQIRow(cells.ToArray());
-					rows.Add(rowData);
+					continue;
 				}
+
+				var alarmState = elementState.Equals(ElementState.Active) ? Enum.GetName(typeof(AlarmLevel), element.GetAlarmLevel()) : "N/A";
+
+				var nodeEdgeX = element.Properties.FirstOrDefault(x => x.Equals("NodeEdgeX"));
+				var nodeEdgeY = element.Properties.FirstOrDefault(x => x.Equals("NodeEdgeY"));
+				var nodeEdgeXValue = "N/A";
+				var nodeEdgeYValue = "N/A";
+				if (nodeEdgeX != null && nodeEdgeY != null)
+				{
+					nodeEdgeXValue = nodeEdgeX.Value;
+					nodeEdgeYValue = nodeEdgeY.Value;
+				}
+
+				var cells = new List<GQICell>
+				{
+					new GQICell { Value = $"{element.AgentId}/{element.Id}"},
+					new GQICell { Value = element.Name},
+					new GQICell { Value = element.State.ToString()},
+					new GQICell { Value = element.Protocol},
+					new GQICell { Value = alarmState},
+					new GQICell { Value = int.TryParse(nodeEdgeXValue, out int nodeEdgeXInt) ? nodeEdgeXInt : -1 },
+					new GQICell { Value = int.TryParse(nodeEdgeYValue, out int nodeEdgeYInt) ? nodeEdgeYInt : -1 },
+				};
+
+				var rowData = new GQIRow(cells.ToArray());
+				rows.Add(rowData);
 			}
 
 			return new GQIPage(rows.ToArray()) { HasNextPage = false };
 		}
 
-		private List<LiteElementInfoEvent> GetElements()
+		private List<IDmsElement> GetElements()
 		{
-			var huaweiRequest = new GetLiteElementInfo(includeStopped: false)
-			{
-				ProtocolName = "Huawei Manager",
-				ProtocolVersion = "Production",
-			};
-
-			var juniperRequest = new GetLiteElementInfo(includeStopped: false)
-			{
-				ProtocolName = "Juniper Networks Manager",
-				ProtocolVersion = "Production",
-			};
-
-			var ciscoRequest = new GetLiteElementInfo(includeStopped: false)
-			{
-				ProtocolName = "CISCO ASR Manager",
-				ProtocolVersion = "Production",
-			};
-
 			try
 			{
-				var huaweiElements = _dms.SendMessages(huaweiRequest).OfType<LiteElementInfoEvent>().ToList();
-				var juniperElements = _dms.SendMessages(juniperRequest).OfType<LiteElementInfoEvent>().ToList();
-				var ciscoElements = _dms.SendMessages(ciscoRequest).OfType<LiteElementInfoEvent>().ToList();
-				juniperElements.AddRange(ciscoElements);
-				huaweiElements.AddRange(juniperElements);
+				var elementsRetrieved = new List<IDmsElement>();
 
-				return huaweiElements;
+				var huaweiElements = _dms.GetElements().Where(x => String.Equals(x.Protocol.Name, "Huawei Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
+				var juniperElements = _dms.GetElements().Where(x => String.Equals(x.Protocol.Name, "Juniper Networks Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
+				var ciscoElements = _dms.GetElements().Where(x => String.Equals(x.Protocol.Name, "CISCO ASR Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
+
+				elementsRetrieved.AddRange(huaweiElements);
+				elementsRetrieved.AddRange(ciscoElements);
+				elementsRetrieved.AddRange(juniperElements);
+
+				return elementsRetrieved;
 			}
 			catch (Exception)
 			{
-				return new List<LiteElementInfoEvent>();
-			}
-		}
-
-		private Dictionary<string, string> GetNodeEdgeValues(string coordinate)
-		{
-			Dictionary<string, string> dict = new Dictionary<string, string>();
-			var getPropertyNodeX = new GetPropertyValueMessage
-			{
-				PropertyName = coordinate,
-			};
-
-			DMSMessage[] responses = _dms.SendMessages(getPropertyNodeX);
-			foreach (var response in responses)
-			{
-				var uniqueResponse = response as PropertyChangeEventMessage;
-				if (uniqueResponse == null)
-				{
-					continue;
-				}
-
-				var value = uniqueResponse.Value;
-				var element = $"{uniqueResponse.DataMinerID}/{uniqueResponse.ElementID}";
-				dict[element] = value;
-			}
-
-			return dict;
-		}
-
-		private string GetElementAlarmState(Int32 elementID, Int32 dmaID)
-		{
-			int alarmStateParam = 65008;
-			var request = new GetParameterMessage
-			{
-				DataMinerID = dmaID,
-				ElId = elementID,
-				ParameterId = alarmStateParam,
-			};
-
-			try
-			{
-				var alarmStateMessage = _dms.SendMessages(request);
-				var alarmState = alarmStateMessage.OfType<GetParameterResponseMessage>().ToList();
-
-				return alarmState[0].DisplayValue;
-			}
-			catch (Exception)
-			{
-				return null;
+				return new List<IDmsElement>();
 			}
 		}
 
@@ -243,6 +178,76 @@ namespace RetrieveAvailableNodes_1
 			public double Protocol { get; set; }
 
 			public string AlarmState { get; set; }
+		}
+	}
+
+	public class GqiDmsConnection : ICommunication
+	{
+		private readonly GQIDMS _gqiDms;
+
+		public GqiDmsConnection(GQIDMS gqiDms)
+		{
+			_gqiDms = gqiDms ?? throw new ArgumentNullException(nameof(gqiDms));
+		}
+
+		public DMSMessage[] SendMessage(DMSMessage message)
+		{
+			return _gqiDms.SendMessages(message);
+		}
+
+		public DMSMessage SendSingleResponseMessage(DMSMessage message)
+		{
+			return _gqiDms.SendMessage(message);
+		}
+
+		public DMSMessage SendSingleRawResponseMessage(DMSMessage message)
+		{
+			return _gqiDms.SendMessage(message);
+		}
+
+		public void AddSubscriptionHandler(NewMessageEventHandler handler)
+		{
+			throw new NotSupportedException();
+		}
+
+		public void AddSubscriptions(NewMessageEventHandler handler, string handleGuid, SubscriptionFilter[] subscriptions)
+		{
+			throw new NotSupportedException();
+		}
+
+		public void AddSubscriptions(NewMessageEventHandler handler, string setId, string internalHandleIdentifier, SubscriptionFilter[] subscriptions)
+		{
+			throw new NotSupportedException();
+		}
+
+		public void ClearSubscriptionHandler(NewMessageEventHandler handler)
+		{
+			throw new NotSupportedException();
+		}
+
+		public void ClearSubscriptions(NewMessageEventHandler handler, string handleGuid, bool replaceWithEmpty = false)
+		{
+			throw new NotSupportedException();
+		}
+
+		public void ClearSubscriptions(string setId, string internalHandleIdentifier, SubscriptionFilter[] subscriptions, bool force = false)
+		{
+			throw new NotSupportedException();
+		}
+
+		public void AddSubscriptions(NewMessageEventHandler handler, string setId, string internalHandleIdentifier, SubscriptionFilter[] subscriptions, TimeSpan subscribeTimeout)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ClearSubscriptions(string setId, string internalHandleIdentifier, SubscriptionFilter[] subscriptions, TimeSpan subscribeTimeout, bool force = false)
+		{
+			throw new NotImplementedException();
+		}
+
+		public DMSMessage[] SendMessages(DMSMessage[] messages)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
