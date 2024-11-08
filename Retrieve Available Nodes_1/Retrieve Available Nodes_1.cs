@@ -54,7 +54,6 @@ namespace RetrieveAvailableNodes_1
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Configuration;
 	using System.Linq;
 	using Skyline.DataMiner.Analytics.GenericInterface;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
@@ -68,7 +67,6 @@ namespace RetrieveAvailableNodes_1
 	public class CollectNodes : IGQIDataSource, IGQIOnInit
 	{
 		private IDms _dms;
-		private GQIDMS _gqiDms;
 
 		public GQIColumn[] GetColumns()
 		{
@@ -91,8 +89,7 @@ namespace RetrieveAvailableNodes_1
 
 		public OnInitOutputArgs OnInit(OnInitInputArgs args)
 		{
-			_gqiDms = args.DMS;
-			_dms = DmsFactory.CreateDms(new GqiDmsConnection(_gqiDms));
+			_dms = DmsFactory.CreateDms(new GqiDmsConnection(args.DMS));
 			return default;
 		}
 
