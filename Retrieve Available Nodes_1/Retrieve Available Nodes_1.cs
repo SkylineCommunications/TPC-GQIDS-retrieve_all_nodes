@@ -89,6 +89,11 @@ namespace RetrieveAvailableNodes_1
 
 		public OnInitOutputArgs OnInit(OnInitInputArgs args)
 		{
+			if (args.DMS == null)
+			{
+				throw new InvalidOperationException("DMS object is not initialized.");
+			}
+
 			_dms = DmsFactory.CreateDms(new GqiDmsConnection(args.DMS));
 			return default;
 		}
@@ -114,14 +119,18 @@ namespace RetrieveAvailableNodes_1
 
 				var alarmState = elementState.Equals(ElementState.Active) ? Enum.GetName(typeof(AlarmLevel), element.GetAlarmLevel()) : "N/A";
 
-				var nodeEdgeX = element.Properties.FirstOrDefault(x => x.Equals("NodeEdgeX"));
-				var nodeEdgeY = element.Properties.FirstOrDefault(x => x.Equals("NodeEdgeY"));
+				var nodeEdgeX = element.Properties.Where(x => x.Definition.Name.Equals("NodeEdgeX"));
+				var nodeEdgeY = element.Properties.Where(x => x.Definition.Name.Equals("NodeEdgeY"));
 				var nodeEdgeXValue = "N/A";
 				var nodeEdgeYValue = "N/A";
-				if (nodeEdgeX != null && nodeEdgeY != null)
+				if (nodeEdgeX.Any())
 				{
-					nodeEdgeXValue = nodeEdgeX.Value;
-					nodeEdgeYValue = nodeEdgeY.Value;
+					nodeEdgeXValue = nodeEdgeX.First().Value;
+				}
+
+				if (nodeEdgeY.Any())
+				{
+					nodeEdgeYValue = nodeEdgeY.First().Value;
 				}
 
 				var cells = new List<GQICell>
@@ -129,7 +138,7 @@ namespace RetrieveAvailableNodes_1
 					new GQICell { Value = $"{element.AgentId}/{element.Id}"},
 					new GQICell { Value = element.Name},
 					new GQICell { Value = element.State.ToString()},
-					new GQICell { Value = element.Protocol},
+					new GQICell { Value = element.Protocol.Name},
 					new GQICell { Value = alarmState},
 					new GQICell { Value = int.TryParse(nodeEdgeXValue, out int nodeEdgeXInt) ? nodeEdgeXInt : -1 },
 					new GQICell { Value = int.TryParse(nodeEdgeYValue, out int nodeEdgeYInt) ? nodeEdgeYInt : -1 },
@@ -162,19 +171,6 @@ namespace RetrieveAvailableNodes_1
 			{
 				return new List<IDmsElement>();
 			}
-		}
-
-		public class Element
-		{
-			public string Index { get; set; }
-
-			public string Name { get; set; }
-
-			public string State { get; set; }
-
-			public double Protocol { get; set; }
-
-			public string AlarmState { get; set; }
 		}
 	}
 
