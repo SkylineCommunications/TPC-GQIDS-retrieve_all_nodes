@@ -157,9 +157,11 @@ namespace RetrieveAvailableNodes_1
 			{
 				var elementsRetrieved = new List<IDmsElement>();
 
-				var huaweiElements = _dms.GetElements().Where(x => String.Equals(x.Protocol.Name, "Huawei Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
-				var juniperElements = _dms.GetElements().Where(x => String.Equals(x.Protocol.Name, "Juniper Networks Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
-				var ciscoElements = _dms.GetElements().Where(x => String.Equals(x.Protocol.Name, "CISCO ASR Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
+				var dmsElements = _dms.GetElements();
+
+				var huaweiElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Huawei Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
+				var juniperElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Juniper Networks Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
+				var ciscoElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "CISCO ASR Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
 
 				elementsRetrieved.AddRange(huaweiElements);
 				elementsRetrieved.AddRange(ciscoElements);
