@@ -79,6 +79,10 @@ namespace RetrieveAvailableNodes_1
 				new GQIStringColumn("Alarm State"),
 				new GQIIntColumn("X"),
 				new GQIIntColumn("Y"),
+				new GQIStringColumn("PLAZA"),
+				new GQIStringColumn("REGION"),
+				new GQIStringColumn("SUCURSAL"),
+				new GQIStringColumn("UNIDAD DE NEGOCIO"),
 			};
 		}
 
@@ -121,8 +125,17 @@ namespace RetrieveAvailableNodes_1
 
 				var nodeEdgeX = element.Properties.Where(x => x.Definition.Name.Equals("NodeEdgeX"));
 				var nodeEdgeY = element.Properties.Where(x => x.Definition.Name.Equals("NodeEdgeY"));
+				var plaza = element.Properties.Where(x => x.Definition.Name.Equals("PLAZA"));
+				var region = element.Properties.Where(x => x.Definition.Name.Equals("REGION"));
+				var sucursal = element.Properties.Where(x => x.Definition.Name.Equals("SUCURSAL"));
+				var unidadDeNegocio = element.Properties.Where(x => x.Definition.Name.Equals("UNIDAD DE NEGOCIO"));
 				var nodeEdgeXValue = "N/A";
 				var nodeEdgeYValue = "N/A";
+				var plazaValue = "N/A";
+				var regionValue = "M/A";
+				var sucursalValue = "N/A";
+				var unidadDeNegocioValue = "N/A";
+
 				if (nodeEdgeX.Any())
 				{
 					nodeEdgeXValue = nodeEdgeX.First().Value;
@@ -131,6 +144,26 @@ namespace RetrieveAvailableNodes_1
 				if (nodeEdgeY.Any())
 				{
 					nodeEdgeYValue = nodeEdgeY.First().Value;
+				}
+
+				if (plaza.Any())
+				{
+					plazaValue = plaza.First().Value;
+				}
+
+				if (region.Any())
+				{
+					regionValue = region.First().Value;
+				}
+
+				if (sucursal.Any())
+				{
+					sucursalValue = sucursal.First().Value;
+				}
+
+				if (unidadDeNegocio.Any())
+				{
+					unidadDeNegocioValue = unidadDeNegocio.First().Value;
 				}
 
 				var cells = new List<GQICell>
@@ -142,6 +175,10 @@ namespace RetrieveAvailableNodes_1
 					new GQICell { Value = alarmState},
 					new GQICell { Value = int.TryParse(nodeEdgeXValue, out int nodeEdgeXInt) ? nodeEdgeXInt : -1 },
 					new GQICell { Value = int.TryParse(nodeEdgeYValue, out int nodeEdgeYInt) ? nodeEdgeYInt : -1 },
+					new GQICell { Value = plazaValue},
+					new GQICell { Value = regionValue},
+					new GQICell { Value = sucursalValue},
+					new GQICell { Value = unidadDeNegocioValue},
 				};
 
 				var rowData = new GQIRow(cells.ToArray());
