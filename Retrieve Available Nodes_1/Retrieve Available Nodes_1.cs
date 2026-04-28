@@ -55,6 +55,7 @@ namespace RetrieveAvailableNodes_1
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Retrieve_Available_Nodes_1;
 	using Skyline.DataMiner.Analytics.GenericInterface;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
 	using Skyline.DataMiner.Net;
@@ -196,13 +197,15 @@ namespace RetrieveAvailableNodes_1
 
 				var dmsElements = _dms.GetElements();
 
-				var huaweiElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Huawei Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
-				var juniperElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Juniper Networks Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
-				var ciscoElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "CISCO ASR Manager") && String.Equals(x.Protocol.Version, "Production")).ToList();
+				var huaweiElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Huawei Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
+				var juniperElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Juniper Networks Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
+				var ciscoElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "CISCO ASR Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
+				var alcatelElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Alcatel Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
 
 				elementsRetrieved.AddRange(huaweiElements);
 				elementsRetrieved.AddRange(ciscoElements);
 				elementsRetrieved.AddRange(juniperElements);
+				elementsRetrieved.AddRange(alcatelElements);
 
 				return elementsRetrieved;
 			}
