@@ -197,10 +197,10 @@ namespace RetrieveAvailableNodes_1
 
 				var dmsElements = _dms.GetElements();
 
-				var huaweiElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Huawei Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
-				var juniperElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Juniper Networks Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
-				var ciscoElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "CISCO ASR Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
-				var alcatelElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, "Alcatel Manager") && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
+				var huaweiElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, Constants.HuaweiManagerProtocolName) && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
+				var juniperElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, Constants.JuniperNetworksManagerProtocolName) && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
+				var ciscoElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, Constants.CiscoASRManagerProtocolName) && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
+				var alcatelElements = dmsElements.Where(x => String.Equals(x.Protocol.Name, Constants.AlcatelManagerProtocolName) && String.Equals(x.Protocol.Version, Constants.ProductionVersion)).ToList();
 
 				elementsRetrieved.AddRange(huaweiElements);
 				elementsRetrieved.AddRange(ciscoElements);
